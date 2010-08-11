@@ -1,0 +1,47 @@
+<html>
+<script type="text/javascript" src="arcfour.js"></script>
+<script type="text/javascript">
+function test_encrypt(key, data, expect) {
+    var ac4 = new ArcFour(key);
+    var results = ac4.encrypt(data);
+    if (results.length != expect.length) {
+        return results;
+    }
+    for (var i = 0; i < expect.length; i++) {
+        if (parseInt(results[i]) != parseInt(expect[i])) {
+            return results;
+        }
+    }
+    return true;
+}
+
+function exec_test(name, key, data, expect) {
+    var resultsArea = document.getElementById('result');
+    var dl = document.createElement('dl');
+    var dt = document.createElement('dt');
+    dt.innerHTML = name;
+    var dd = document.createElement('dd');
+    var results = test_encrypt(key, data, expect);
+    dd.innerHTML = (results == true) ? 'PASS' : 'FAIL';
+    dl.appendChild(dt);
+    dl.appendChild(dd);
+    resultsArea.appendChild(dl);
+}
+
+function test() {
+    exec_test('Test Vector 1',
+              [0x01, 0x23, 0x45, 0x67, 0x89, 0xAB, 0xCD, 0xEF],
+              [0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00],
+              [0x74, 0x94, 0xC2, 0xE7, 0x10, 0x4B, 0x08, 0x79]);
+    exec_test('Test Vector 2',
+              [0x61, 0x8a, 0x63, 0xd2, 0xfb],
+              [0xdc, 0xee, 0x4c, 0xf9, 0x2c],
+              [0xf1, 0x38, 0x29, 0xc9, 0xde]);
+}
+</script>
+<body onLoad="test()">
+<h1>ArcFour.js</h1>
+<div id="result">
+</div>
+</body>
+</html>
